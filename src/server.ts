@@ -9,7 +9,7 @@ const setupExpress = () =>{
 
 const startServer = () =>{
     app.listen(9000, ()=>{
-        console.log("API runs on 9000 port...")
+        console.log("API runs on http://localhost:9000/")
     })
 }
 
