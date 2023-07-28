@@ -1,17 +1,14 @@
 import { Request, Response, NextFunction } from "express"
 import { logger } from "../logger"
-import { AppDataSource } from "../data-source";
-import { Course } from "../models/course";
+import { getManyCourse } from "../lib/courseActions";
+
 
 export const getAllCourses = async (req: Request, res: Response , next:NextFunction) => {
     try{
         logger.debug("Called getAllCourse()");
 
-        const courses = await AppDataSource
-            .getRepository(Course)
-            .createQueryBuilder("courses")
-            .orderBy("courses.sequenceNo")
-            .getMany();
+        const courses = await getManyCourse();
+        
         res.status(200).json({courses});
     
     }catch(err){
