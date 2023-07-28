@@ -16,12 +16,15 @@ import { getAllCourses } from './routes/get-all-courses';
 import { errorHandler } from './middlewares/errorHandler';
 
 const app = express();
+const cors = require("cors");
 
 const setupExpress = () => {
+  app.use(errorHandler);
+  app.use(cors({origin:true}));
+  
   app.route("/").get(root);
   app.route("/api/courses").get(getAllCourses);
 
-  app.use(errorHandler);
 }
 
 const startServer = () => {
