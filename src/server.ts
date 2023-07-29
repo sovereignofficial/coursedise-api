@@ -22,6 +22,9 @@ import { uploadLesson } from './routes/upload-lesson';
 import { getLessons } from './routes/get-lessons';
 import { updateLesson } from './routes/update-lesson';
 import { removeLesson } from './routes/remove-lesson';
+import { register } from './routes/auth/register';
+import { login } from './routes/auth/login';
+import { authMiddleware } from './middlewares/authMiddleware';
 
 const app = express();
 const cors = require("cors");
@@ -32,18 +35,20 @@ const setupExpress = () => {
   app.use(express.json());
   
   app.route("/").get(root);
-  app.route("/api/courses").get(getAllCourses);
-  app.route("/api/courses/:courseID").get(findCourseById);
-  app.route("/api/courses/:courseID/lessons").get(getLessons);
+  app.route("/api/courses").get(authMiddleware,getAllCourses);
+  app.route("/api/courses/:courseID").get(authMiddleware,findCourseById);
+  app.route("/api/courses/:courseID/lessons").get(authMiddleware,getLessons);
 
-  app.route("/api/courses/:courseID/delete").delete(deleteCourse);
-  app.route("/api/lessons/delete").delete(removeLesson);
+  app.route("/api/courses/:courseID/delete").delete(authMiddleware,deleteCourse);
+  app.route("/api/lessons/delete").delete(authMiddleware,removeLesson);
  
-  app.route("/api/courses/create").post(createCourse);
-  app.route("/api/lessons/create").post(uploadLesson);
+  app.route("/api/courses/create").post(authMiddleware,createCourse);
+  app.route("/api/lessons/create").post(authMiddleware,uploadLesson);
+  app.route("/api/users/register").post(register);
+  app.route("/api/users/login").post(login)
 
-  app.route("/api/courses/update").patch(updateCourse);
-  app.route("/api/lessons/update").patch(updateLesson);
+  app.route("/api/courses/update").patch(authMiddleware,updateCourse);
+  app.route("/api/lessons/update").patch(authMiddleware,updateLesson);
 }
 
 const startServer = () => {
